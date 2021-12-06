@@ -11,7 +11,7 @@ import pickle
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-from ResNet.Models import ResNet
+from SimCLR.Models import ResNet
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
