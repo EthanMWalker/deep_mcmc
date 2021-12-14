@@ -30,6 +30,7 @@ if __name__ == '__main__':
 
   mean = torch.zeros(10,28*28).to(device)
   var = torch.ones(10,28*28).to(device)
+  # var = torch.zeros(10,28*28, 28*28).to(device)
 
   for i, item in enumerate(train_set):
     xs[i] = item[0].view(28*28)
