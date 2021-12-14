@@ -1,17 +1,7 @@
 import torch
-import torch.nn as nn
-from torch import distributions
 import torchvision as tv
 from torchvision.transforms import transforms
-
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-import numpy as np
 import pickle
-import matplotlib.pyplot as plt
-from tqdm import tqdm
-
-from SimCLR.Models import ResNet
-from train_resnet_cifar import train
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
@@ -39,7 +29,7 @@ if __name__ == '__main__':
   ys = torch.empty(len(train_set))
 
   mean = torch.zeros(10,28*28).to(device)
-  var = torch.zeros(10,28*28, 28*28).to(device)
+  var = torch.ones(10,28*28).to(device)
 
   for i, item in enumerate(train_set):
     xs[i] = item[0].view(28*28)
@@ -49,12 +39,12 @@ if __name__ == '__main__':
   for i in range(10):
     mask = ys == i
     mean[i] = xs[mask].mean(axis=0)
-    var[i] = xs[mask].var(axis=0)
+    var[i] = xs[mask].var(axis=0) + 1e-10
   
   out_dict = {
-    'mean': mean.detach().cpu().numpy(),
-    'var': var.detach().cpu().numpy()
+    'mean': mean.detach().cpu(),
+    'var': var.detach().cpu()
   }
 
-  with open(f'resnet_chkpt/mean_var_cifar_result.pickle','wb') as out:
+  with open(f'chkpt/mean_var_mnist_result.pickle','wb') as out:
     pickle.dump(out_dict, out)
