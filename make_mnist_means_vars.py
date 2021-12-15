@@ -40,7 +40,7 @@ if __name__ == '__main__':
   for i in range(10):
     mask = ys == i
     mean[i] = xs[mask].mean(axis=0)
-    var[i] = xs[mask].var(axis=0) + 1e-10
+    var[i] = xs[mask].var(axis=0) + 1e-20
   
   out_dict = {
     'mean': mean.detach().cpu(),

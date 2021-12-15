@@ -11,7 +11,7 @@ import pickle
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-from SimCLR.Models import ResNet
+from ResNet.Models import ResNet
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
@@ -77,7 +77,7 @@ def train(model, train_loader, lr, num_epochs=10, save_iters=5):
             'optimizer_state_dict': optimizer.state_dict(),
             'epoch': epoch,
             'loss': loss
-          }, f'resnet_chkpt/resnet_mnist_{epoch}.tar'
+          }, f'chkpt/backup/resnet_mnist_{epoch}.tar'
         )
   
   return model, losses
@@ -105,7 +105,7 @@ def test(model, test_loader):
 
 if __name__ == '__main__':
   train_loader, test_loader = get_mnist(512)
-  n_epochs = 200
+  n_epochs = 10
   lr = 1e-5
 
   model = ResNet(1, 10).to(device)
@@ -116,7 +116,7 @@ if __name__ == '__main__':
   torch.save(
     {
     'model_state_dict': model.state_dict()
-    }, f'resnet_chkpt/resnet_mnist.tar'
+    }, f'chkpt/resnet_mnist.tar'
   )
   # model.load_state_dict(torch.load('chkpt/test.tar')['model_state_dict'])
 
@@ -133,14 +133,14 @@ if __name__ == '__main__':
   ax = figure.add_subplot(111)
   disp = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=classes)
   disp.plot(ax=ax)
-  plt.savefig('resnet_chkpt/resnet_mnist_conf')
+  plt.savefig('hkpt/resnet_mnist_conf')
   plt.clf()
 
   plt.plot(np.linspace(0,n_epochs,len(losses)),losses, label='mean loss')
   plt.xlabel('epochs')
   plt.ylabel('loss')
   plt.legend()
-  plt.savefig('resnet_chkpt/resnet_mnist_loss')
+  plt.savefig('chkpt/resnet_mnist_loss')
   plt.clf()
 
   out_dict = {
@@ -149,5 +149,5 @@ if __name__ == '__main__':
     'actual': actual
   }
 
-  with open(f'resnet_chkpt/resnet_mnist_result.pickle','wb') as out:
+  with open(f'chkpt/resnet_mnist_result.pickle','wb') as out:
     pickle.dump(out_dict, out)

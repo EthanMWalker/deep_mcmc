@@ -25,7 +25,6 @@ class GenerativeClassifier(nn.Module):
 
   def forward(self, x):
     pis = torch.log(self.clf(x))
-    print(pis)
     x = torch.flatten(x,1)
     probs = torch.zeros(x.size(0)).to(x.device)
     for i in range(self.n_classes):
