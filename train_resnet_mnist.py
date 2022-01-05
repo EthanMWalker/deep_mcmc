@@ -41,7 +41,7 @@ def get_mnist(batch_size):
 
 def train(model, train_loader, lr, num_epochs=10, save_iters=5):
 
-  optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+  optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-8)
   criterion = nn.CrossEntropyLoss()
   losses = []
   running_loss = 0
@@ -105,7 +105,7 @@ def test(model, test_loader):
 
 if __name__ == '__main__':
   train_loader, test_loader = get_mnist(512)
-  n_epochs = 10
+  n_epochs = 200
   lr = 1e-5
 
   model = ResNet(1, 10).to(device)
@@ -133,7 +133,7 @@ if __name__ == '__main__':
   ax = figure.add_subplot(111)
   disp = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=classes)
   disp.plot(ax=ax)
-  plt.savefig('hkpt/resnet_mnist_conf')
+  plt.savefig('chkpt/resnet_mnist_conf')
   plt.clf()
 
   plt.plot(np.linspace(0,n_epochs,len(losses)),losses, label='mean loss')

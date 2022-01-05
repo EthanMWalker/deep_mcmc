@@ -40,7 +40,7 @@ def get_cifar(batch_size):
 
 def train(model, train_loader, lr, num_epochs=10, save_iters=5):
 
-  optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+  optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-8)
   criterion = nn.CrossEntropyLoss()
   losses = []
   running_loss = 0

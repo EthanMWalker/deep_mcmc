@@ -3,7 +3,9 @@ import torchvision as tv
 from torchvision.transforms import transforms
 import pickle
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+from AutoEncoder.Models import AutoEncoder
+
+device = torch.device('cuda:1' if torch.cuda.is_available() else 'cpu')
 
 def get_mnist():
   transform = transforms.Compose(
@@ -24,16 +26,22 @@ def get_mnist():
 
 
 if __name__ == '__main__':
+  latent_size = 10
+
   train_set, test_set = get_mnist()
-  xs = torch.empty(len(train_set), 28*28)
+  xs = torch.empty(len(train_set), latent_size)
   ys = torch.empty(len(train_set))
 
-  mean = torch.zeros(10,28*28).to(device)
-  var = torch.ones(10,28*28).to(device)
+  enc = AutoEncoder(784, latent_size, 15).to(device)
+  enc.load_state_dict(torch.load('chkpt/encoder_mnist.tar')['model_state_dict'])
+  enc.eval();
+
+  mean = torch.zeros(10,latent_size).to(device)
+  var = torch.ones(10,latent_size).to(device)
   # var = torch.zeros(10,28*28, 28*28).to(device)
 
   for i, item in enumerate(train_set):
-    xs[i] = item[0].view(28*28)
+    xs[i] = enc.encode(item[0].view(28*28).to(device))
     ys[i] = item[1]
 
 
@@ -47,5 +55,5 @@ if __name__ == '__main__':
     'var': var.detach().cpu()
   }
 
-  with open(f'chkpt/mean_var_mnist_result.pickle','wb') as out:
+  with open(f'chkpt/encoded_mean_var_mnist_result.pickle','wb') as out:
     pickle.dump(out_dict, out)

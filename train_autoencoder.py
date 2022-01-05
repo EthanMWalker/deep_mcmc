@@ -42,7 +42,7 @@ def get_mnist(batch_size):
 
 def train(model, train_loader, lr, num_epochs=10, save_iters=5):
 
-  optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+  optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=1e-8)
   criterion = nn.MSELoss()
   losses = []
   running_loss = 0
@@ -52,11 +52,11 @@ def train(model, train_loader, lr, num_epochs=10, save_iters=5):
     for epoch in range(num_epochs):
       for x, y in train_loader:
         x = x.to(device)
-        y = y.to(device)
+        # y = y.to(device)
 
         optimizer.zero_grad()
         out = model(x)
-        loss = criterion(out,y)
+        loss = criterion(out,x)
 
         loss.backward()
         optimizer.step()
@@ -106,10 +106,10 @@ def test(model, test_loader):
 
 if __name__ == '__main__':
   train_loader, test_loader = get_mnist(512)
-  n_epochs = 10
-  lr = 1e-5
+  n_epochs = 200
+  lr = 1e-4
 
-  model = AutoEncoder(784, 10, 15).to(device)
+  model = AutoEncoder(784, 20, 15).to(device)
   
 
   model, losses = train(model, train_loader, lr, n_epochs, 10)
