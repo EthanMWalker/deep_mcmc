@@ -1,2 +1,3 @@
 data/
-chkpt/
+*.pickle
+*.tar
