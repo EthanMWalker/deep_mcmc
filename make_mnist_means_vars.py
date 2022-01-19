@@ -26,7 +26,7 @@ def get_mnist():
 
 
 if __name__ == '__main__':
-  latent_size = 10
+  latent_size = 20
 
   train_set, test_set = get_mnist()
   xs = torch.empty(len(train_set), latent_size)
